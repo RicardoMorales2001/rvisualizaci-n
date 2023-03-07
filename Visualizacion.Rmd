@@ -1,0 +1,72 @@
+---
+title: "Tarea de visualización"
+author: "Ricardo Morales"
+date: "2023-03-07"
+course: "Rstudio"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(tidyverse); library(ggpubr); library(gridExtra); library(cowplot); library(dplyr)
+
+set.seed(42)
+n <- 1000
+x <- runif(n) * 3
+y <- x * sin(1/x) + rnorm(n) / 25
+
+df <- data.frame(x = x, y = y)
+
+img1 <- ggplot(df, aes(x, y)) + geom_point(alpha = 0.3, col = "navyblue") +
+  geom_smooth(se = FALSE) + scale_x_continuous(limits = c(0, 0.5)) +
+  scale_y_continuous(limits = c(-0.3, 0.4)) + theme_bw()
+
+img2 = ggdotplot(ToothGrowth, x = "dose", y = "len",
+               color = "dose", palette = "npg", binwidth = 1)+ theme_classic()
+
+
+###########################################
+data(mtcars)
+mtcars$name = rownames(mtcars)
+mtcars$cyl = as.factor(mtcars$cyl)
+
+# barplot por registro
+img3 <- ggbarplot(mtcars, x = "name", y = "mpg", fill = "cyl",  
+                color = "white",  palette = "jco", 
+                sort.val = "asc", sort.by.groups = TRUE,
+                x.text.angle = 90) + font("x.text", size = 8)
+
+# scatterplot con regresión y ecuaciones
+img4 = ggscatter(mtcars, x = "wt", y = "mpg", add = "reg.line", conf.int = TRUE,
+               color = "cyl", palette = "jco", shape = "cyl") +
+  stat_cor(aes(color = cyl), label.x.npc = "centre", label.y.npc="top")
+
+# densityplot
+img5 = ggplot(diamonds, aes(depth, fill = cut, colour = cut)) +
+  geom_density(alpha = 0.2, na.rm = TRUE) + 
+  xlim(58, 68) +  theme_classic() + theme(legend.position = "bottom")
+
+img6 = ggplot(faithfuld, aes(eruptions, waiting)) + 
+  geom_raster(aes(fill = density)) + theme_classic() +
+  scale_fill_gradientn(colours = heat.colors(10, rev = TRUE), na.value = "white")
+
+
+# COMPOSICION DE FIGURAS
+
+composicion=  ggarrange(img3,
+                   ggarrange(img5,
+                             ggarrange(img1, img2, img4, img6, nrow=2, ncol=2,
+                                       labels= c("B", "C", "D", "E")),
+                             ncol= 2, labels= "F"),
+                   nrow =2, labels= "A")
+ggsave(filename = "imager.png", height = 14, width = 14,
+       plot = composicion, dpi = 500)         
+print(composicion)
+```
+
+
