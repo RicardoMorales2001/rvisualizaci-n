@@ -10,10 +10,17 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+### Librerias utilizadas
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(ggpubr)
+library(gridExtra)
+library(cowplot)
+library(dplyr)
+```
 
-
-```{r}
-library(tidyverse); library(ggpubr); library(gridExtra); library(cowplot); library(dplyr)
+### Inicio del ejercico
+```{r message=FALSE, warning=FALSE}
 
 set.seed(42)
 n <- 1000
@@ -30,23 +37,23 @@ img2 = ggdotplot(ToothGrowth, x = "dose", y = "len",
                color = "dose", palette = "npg", binwidth = 1)+ theme_classic()
 
 
-###########################################
+# Data usada
 data(mtcars)
 mtcars$name = rownames(mtcars)
 mtcars$cyl = as.factor(mtcars$cyl)
 
-# barplot por registro
+# Grafica de barras por registro
 img3 <- ggbarplot(mtcars, x = "name", y = "mpg", fill = "cyl",  
                 color = "white",  palette = "jco", 
                 sort.val = "asc", sort.by.groups = TRUE,
                 x.text.angle = 90) + font("x.text", size = 8)
 
-# scatterplot con regresión y ecuaciones
+# Grafica con regresión y ecuaciones
 img4 = ggscatter(mtcars, x = "wt", y = "mpg", add = "reg.line", conf.int = TRUE,
                color = "cyl", palette = "jco", shape = "cyl") +
   stat_cor(aes(color = cyl), label.x.npc = "centre", label.y.npc="top")
 
-# densityplot
+# Grafica de densidad
 img5 = ggplot(diamonds, aes(depth, fill = cut, colour = cut)) +
   geom_density(alpha = 0.2, na.rm = TRUE) + 
   xlim(58, 68) +  theme_classic() + theme(legend.position = "bottom")

@@ -1,7 +1,7 @@
 ---
 title: "Visualizacion imagen 2"
 author: "Ricardo Morales"
-date: "2023-03-07"
+date: "2023-03-11"
 output: html_document
 ---
 
@@ -9,18 +9,21 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-#Imagen 2
-#Ejer 2
-
+# Visualización de imagen 2
+### Librerias utilizadas
+```{r message=FALSE, warning=FALSE}
 library("ggplot2")
 library("dplyr")
 library("ggpubr")
 library("ggrepel")
+```
 
+### Inicio del ejercicio
+```{r message=FALSE, warning=FALSE}
 ruta <- "https://raw.githubusercontent.com/martintinch0/CienciaDeDatosParaCuriosos/master/data/gapminder.csv"
 df_gapminder <- read.table(file = ruta, sep=';', header = TRUE, 
                            stringsAsFactors = FALSE)
+
 figure1 <- df_gapminder %>% 
   filter (between(year, 2007, 2007)) %>%
   ggplot(aes(x = gdpPercap, y = lifeExp, 
@@ -34,7 +37,7 @@ figure1 <- df_gapminder %>%
        color="Continente: ") +
   guides(size=FALSE) + 
   theme(legend.position="bottom", 
-        legend.title = element_text(face = "bold", color = "black", size= 10), 
+        legend.title = element_text(face = "bold", color = "black", size= 20), 
         panel.background = element_rect(fill = "white", colour = "grey80"), 
         panel.grid.major = element_line(colour = "grey90", linetype = "dotted"))
 
@@ -53,9 +56,10 @@ figure2 <- df_gapminder %>%
         panel.background = element_rect(fill = "white", colour = "grey80"), 
         panel.grid.major = element_line(colour = "grey90", linetype = "dotted"))
 
-figure1 + annotation_custom(ggplotGrob(figure2), 
-                                 xmin = 30000, xmax = 50000, 
-                                 ymin = 40, ymax = 60
+embebidas= figure1 + annotation_custom(ggplotGrob(figure2), 
+                          xmin = 30000, xmax = 50000, 
+                          ymin = 40, ymax = 60)
+print(embebidas)
+ggsave(filename = "Rst2.png", height = 20, width = 20,
+       plot = embebidas, dpi = 700)
 ```
-
-
